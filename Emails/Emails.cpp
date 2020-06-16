@@ -15,7 +15,7 @@ using namespace std;
 class PostImpl
 {
 	private:
-
+	
 		int iNum; 
 		string strId; 
 		string strPostProvider; 
