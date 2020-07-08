@@ -16,10 +16,10 @@ class PostImplementation
 {
 	private:
 
-		int iNum; 
-		string strId; 
-		string strPostProvider; 
-		string strMessage;
+		int num;
+		string id;
+		string post_provider;
+		string message;
 
 	public:
 
@@ -246,16 +246,16 @@ class PostBox: public PostImplementation
 
 			for(list<PostImplementation*>::iterator iterator=list_post_implementation1.begin(); iterator!=list_post_implementation1.end(); iterator++)
 			{
-				cout<<"Enter number: "; 
+				cout<<"Enter number: ";
 				input>>num;
 
-				cout<<"Enter Id: "; 
+				cout<<"Enter Id: ";
 				input>>id;
 
-				cout<<"Enter PostProvider: "; 
+				cout<<"Enter PostProvider: ";
 				input>>post_provider;
 
-				cout<<"Enter Message: "; 
+				cout<<"Enter Message: ";
 				input>>message;
 
 				(*iterator)=new PostImplementation(num, id, post_provider, message);
