@@ -1,4 +1,4 @@
-#include "pch.h"
+#include"pch.h"
 #include<iostream>
 #include<string>
 #include<list>
@@ -16,10 +16,10 @@ class PostImplementation
 {
 	private:
 
-		int num; 
-		string id; 
-		string post_provider; 
-		string message;
+		int iNum; 
+		string strId; 
+		string strPostProvider; 
+		string strMessage;
 
 	public:
 
