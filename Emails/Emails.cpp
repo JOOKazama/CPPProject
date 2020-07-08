@@ -12,107 +12,111 @@
 
 using namespace std;
 
-class PostImpl
+class PostImplementation
 {
 	private:
 
-		int iNum; 
-		string strId; 
-		string strPostProvider; 
-		string strMessage;
+		int num; 
+		string id; 
+		string post_provider; 
+		string message;
 
 	public:
 
-		PostImpl() {};
+		PostImplementation() {};
 
-		PostImpl(int a, string b, string c, string d)
+		PostImplementation(int num, string id, string post_provider, string message)
 		{
-			iNum=a; 
-			strId=b; 
-			strPostProvider=c; 
-			strMessage=d;
+			this->num=num;
+			this->id=id;
+			this->post_provider=post_provider;
+			this->message=message;
 		}
 
-		PostImpl(string str)
+		PostImplementation(string email)
 		{ 
-			stringstream check1(str);
+			stringstream string_stream(email);
 			string delimiter=":=";
 			vector<string>tokens;
 			string intermediate;
-			size_t pos=0;
+			size_t size=0;
 			string token;
 
-			if(getline(check1, intermediate, '-')) tokens.push_back(intermediate);
-			if(getline(check1, intermediate, '@')) tokens.push_back(intermediate);
-			if(getline(check1, intermediate, ':')) tokens.push_back(intermediate);
+			if(getline(string_stream, intermediate, '-')) tokens.push_back(intermediate);
+			if(getline(string_stream, intermediate, '@')) tokens.push_back(intermediate);
+			if(getline(string_stream, intermediate, ':')) tokens.push_back(intermediate);
 
-			while((pos=str.find(delimiter))!=string::npos)
+			while((size=email.find(delimiter))!=string::npos)
 			{
-				token=str.substr(0, pos);
-				str.erase(0, pos+delimiter.length());
+				token=email.substr(0, size);
+				email.erase(0, size+delimiter.length());
 			}
 
-			tokens.push_back(str);
-			iNum=atoi(tokens[0].c_str()); 
-			strId=tokens[1]; 
-			strPostProvider=tokens[2]; 
-			strMessage=tokens[3];
+			tokens.push_back(email);
+			num=atoi(tokens[0].c_str());
+			id=tokens[1];
+			post_provider=tokens[2];
+			message=tokens[3];
 		}
 
-		void print() { cout<<iNum<<"-"<<strId<<"@"<<strPostProvider<<":="<<strMessage<<endl; }
+		void print_post_implementation() { cout<<num<<"-"<<id<<"@"<<post_provider<<":="<<message<<endl; }
 
-		int get_num() { return iNum; }
-		string get_id() { return strId; }
-		string get_post() { return strPostProvider; }
-		string get_mess() { return strMessage; }
+		int get_num() { return num; }
+		string get_id() { return id; }
+		string get_post_provider() { return post_provider; }
+		string get_message() { return message; }
 
-		int set_num(int a) { iNum=a; }
-		string set_id(string b) { strId=b; }
-		string set_post(string c) { strPostProvider=c; }
-		string set_mess(string d) { strMessage=d; }
+		int set_num(int num) { this->num=num; }
+		string set_str_id(string id) { this->id=id; }
+		string set_str_post_provider(string post_provider) { this->post_provider=post_provider; }
+		string set_str_message(string message) { this->message=message; }
 
-		void set(string a, string b, string c, string d)
+		void set_print_post_implementation(string num, string str_id, string str_post_provider, string str_message)
 		{
-			iNum=atoi(a.c_str()); 
-			strId=b; 
-			strPostProvider=c; 
-			strMessage=d;
+			this->num=atoi(num.c_str());
+			this->id=str_id;
+			this->post_provider=str_post_provider;
+			this->message=str_message;
 		}
 
-		friend istream &operator>>(istream &input, PostImpl& a)
+		friend istream &operator >>(istream &input, PostImplementation& post_implementation)
 		{
-			input>>a.iNum>>a.strId>>a.strPostProvider>>a.strMessage; 
+			input>>post_implementation.num
+				 >>post_implementation.id
+				 >>post_implementation.post_provider
+				 >>post_implementation.message;
 			return input;
 		}
 
-		friend ostream &operator<<(ostream &output, const PostImpl& a)
+		friend ostream &operator <<(ostream &output, const PostImplementation& post_implementation)
 		{
-			output<<"Name: "<<a.iNum<<endl<<"Id: "<<a.strId<<endl<<"PostProvider: "<<a.strPostProvider<<endl<<"Message: "<<a.strMessage<<endl<<endl;
+			output<<"Name: "<<post_implementation.num<<endl
+				  <<"Id: "<<post_implementation.id<<endl
+				  <<"PostProvider: "<<post_implementation.post_provider<<endl
+				  <<"Message: "<<post_implementation.message<<endl<<endl;
 			return output;
 		}
 
-		bool operator ==(const PostImpl& a) { if (iNum == a.iNum) return true; }
+		bool operator ==(const PostImplementation& post_implementation) { if(num==post_implementation.num) return true; }
 
-		bool operator >(const PostImpl& a) 
+		bool operator >(const PostImplementation& post_implementation)
 		{ 
-			if(iNum>a.iNum) return true; 
+			if(num>post_implementation.num) return true;
 			else return false; 
 		}
 
-		bool operator <(const PostImpl& a) 
+		bool operator <(const PostImplementation& post_implementation)
 		{ 
-			if(iNum<a.iNum) return true; 
+			if(num<post_implementation.num) return true;
 			else return false; 
 		}
-
-		friend class PostBox;
 };
 
-class PostBox:public PostImpl
+class PostBox: public PostImplementation
 {
 	private:
 
-		list<PostImpl*>l;
+		list<PostImplementation*>list_post_implementation;
 
 	public:
 
@@ -125,8 +129,8 @@ class PostBox:public PostImpl
 			{
 				while(getline(myfile, line)) 
 				{
-					PostImpl *a=new PostImpl(line); 
-					l.push_back(a); 
+					PostImplementation *post_implementation=new PostImplementation(line);
+					list_post_implementation.push_back(post_implementation);
 				}
 				myfile.close();
 			}
@@ -138,107 +142,124 @@ class PostBox:public PostImpl
 			}
 		}
 
-		PostBox(const PostBox& a) { l=a.l; }
+		PostBox(const PostBox& post_box) { list_post_implementation=post_box.list_post_implementation; }
 
-		void Output(ostream& toStream)
+		void print_post_box()
 		{
-			for(list<PostImpl*>::iterator i=l.begin(); i!=l.end(); i++) 
-			toStream<<(*i)->get_num()<<"-"<<(*i)->get_id()<<"@"<<(*i)->get_post()<<":="<<(*i)->get_mess()<<endl;
+			for(list<PostImplementation*>::iterator iterator=list_post_implementation.begin(); iterator!=list_post_implementation.end(); iterator++)
+			cout<<(*iterator)->get_num()
+				<<"-"<<(*iterator)->get_id()
+				<<"@"<<(*iterator)->get_post_provider()
+				<<":="<<(*iterator)->get_message()<<endl;
 		}
 
-		void print()
+		struct num{ bool operator ()( PostImplementation *post_implementation, PostImplementation *post_implementation1)
+		{ return post_implementation->get_num()<post_implementation1->get_num(); } };
+
+		struct id{ bool operator ()( PostImplementation *post_implementation, PostImplementation *post_implementation1)
+		{ return post_implementation->get_id()<post_implementation1->get_id(); } };
+
+		struct post_provider{ bool operator ()( PostImplementation *post_implementation, PostImplementation *post_implementation1)
+		{ return post_implementation->get_post_provider()<post_implementation1->get_post_provider(); } };
+
+		struct message{ bool operator ()( PostImplementation *post_implementation, PostImplementation *post_implementation1)
+		{ return post_implementation->get_message()<post_implementation1->get_message(); } };
+
+		void sort_num()
 		{
-			for(list<PostImpl*>::iterator i=l.begin(); i!=l.end(); i++)
-			cout<<(*i)->get_num()<<"-"<<(*i)->get_id()<<"@"<<(*i)->get_post()<<":="<<(*i)->get_mess()<<endl;
+			list_post_implementation.sort(num());
+			cout<<endl;
 		}
 
-		struct a{ bool operator ()(const PostImpl * a1, const PostImpl * a2) { return a1->iNum<a2->iNum; } };
-		struct b{ bool operator ()(const PostImpl * b1, const PostImpl * b2) { return b1->strId<b2->strId; } };
-		struct c{ bool operator ()(const PostImpl * c1, const PostImpl * c2) { return c1->strPostProvider<c2->strPostProvider; } };
-		struct d{ bool operator ()(const PostImpl * d1, const PostImpl * d2) { return d1->strMessage<d2->strMessage; } };
-
-		void sortnum() 
-		{ 
-			l.sort(a()); 
-			cout<<endl; 
-		}
-
-		void sortid() 
-		{ 
-			l.sort(b()); 
-			cout<<endl; 
-		}
-
-		void sortpost() 
-		{ 
-			l.sort(c());
-			cout<<endl; 
-		}
-
-		void sortmess() 
-		{ 
-			l.sort(d());
-			cout<<endl; 
-		}
-
-		void map()
+		void sort_id()
 		{
-			vector<string>v;
+			list_post_implementation.sort(id());
+			cout<<endl;
+		}
 
-			for(list<PostImpl*>::iterator i=l.begin(); i!=l.end(); i++) { v.push_back((*i)->get_post()); }
+		void sort_post_provider()
+		{
+			list_post_implementation.sort(post_provider());
+			cout<<endl;
+		}
+
+		void sort_message()
+		{
+			list_post_implementation.sort(message());
+			cout<<endl;
+		}
+
+		void to_map()
+		{
+			vector<string>vector_post_implementation;
+
+			for(list<PostImplementation*>::iterator iterator=list_post_implementation.begin(); iterator!=list_post_implementation.end(); iterator++)
+			{ vector_post_implementation.push_back((*iterator)->get_post_provider()); }
 
 			cout<<endl;
-			std::map<string, int>stringMap;
+			std::map<string, int>map_post_implementation;
 
-			for(vector<string>::iterator i=v.begin(); i!=v.end(); i++)
+			for(vector<string>::iterator iterator=vector_post_implementation.begin(); iterator!=vector_post_implementation.end(); iterator++)
 			{
-				if(stringMap.find(*i)!=stringMap.end()) { stringMap[*i]++; }
-				else { stringMap[*i]=1; }
+				if(map_post_implementation.find(*iterator)!=map_post_implementation.end()) { map_post_implementation[*iterator]++; }
+				else { map_post_implementation[*iterator]=1; }
 			}
 
-			for(std::map<string, int>::const_iterator itr=stringMap.begin(); itr!=stringMap.end(); ++itr)
+			for(std::map<string, int>::const_iterator iterator=map_post_implementation.begin(); iterator!=map_post_implementation.end(); ++iterator)
 			{
-				if (itr->second>1) cout<<itr->first<<" with "<<itr->second<< " users"<<endl;
-				else cout<<itr->first<< " with "<< itr->second<< " users"<<endl;
+				if(iterator->second>1)
+					cout<<iterator->first
+						<<" with "
+						<<iterator->second
+						<< " users"<<endl;
+
+				else cout<<iterator->first
+						<<" with "
+						<<iterator->second
+						<< " users"<<endl;
 			}
+			cout<<endl;
 		}
 
-		friend ostream &operator <<(ostream &output, const PostBox& a)
+		friend ostream &operator <<(ostream &output, const PostBox& post_box)
 		{
-			list<PostImpl*>l1; 
-			l1=a.l;
-			for(list<PostImpl*>::iterator i=l1.begin(); i!=l1.end(); i++) output<<(*i)->get_num()<<"-"<<(*i)->get_id()<<"@"<<(*i)->get_post()<<":="<<(*i)->get_mess()<<endl;
+			list<PostImplementation*>list_post_implementation1=post_box.list_post_implementation;
+			for(list<PostImplementation*>::iterator iterator=list_post_implementation1.begin(); iterator!=list_post_implementation1.end(); iterator++)
+				output<<(*iterator)->get_num()
+					<<"-"<<(*iterator)->get_id()
+					<<"@"<<(*iterator)->get_post_provider()
+					<<":="<<(*iterator)->get_message()<<endl;
 			return output;
 		}
 
-		friend istream &operator >>(istream &input, PostBox& a)
+		friend istream &operator >>(istream &input, PostBox& post_box)
 		{
-			list<PostImpl*>l1; 
-			int a1;
+			list<PostImplementation*>list_post_implementation1;
+			int number_of_elements;
 			cout<<"How many elements you want to add?: ";
-			cin>>a1; 
-			l1.resize(a1);
-			int iNum1;
-			string strId1;
-			string strPostProvider1;
-			string strMessage1;
+			cin>>number_of_elements;
+			list_post_implementation1.resize(number_of_elements);
+			int num;
+			string id;
+			string post_provider;
+			string message;
 
-			for(list<PostImpl*>::iterator i=l1.begin(); i!=l1.end(); i++)
+			for(list<PostImplementation*>::iterator iterator=list_post_implementation1.begin(); iterator!=list_post_implementation1.end(); iterator++)
 			{
 				cout<<"Enter number: "; 
-				input>>iNum1; 
+				input>>num;
 
 				cout<<"Enter Id: "; 
-				input>>strId1;
+				input>>id;
 
 				cout<<"Enter PostProvider: "; 
-				input>>strPostProvider1;
+				input>>post_provider;
 
 				cout<<"Enter Message: "; 
-				input>>strMessage1;
+				input>>message;
 
-				(*i)=new PostImpl(iNum1, strId1, strPostProvider1, strMessage1);
-				a.l.push_back(*i); 
+				(*iterator)=new PostImplementation(num, id, post_provider, message);
+				post_box.list_post_implementation.push_back(*iterator);
 				cout<<endl;
 			}
 
@@ -248,10 +269,10 @@ class PostBox:public PostImpl
 
 int main(void)
 {
-	PostBox a("text.txt");
-	a.print();
-	a.sortpost();
-	a.print();
-	a.map();
+	PostBox post_box("text.txt");
+	post_box.print_post_box();
+	post_box.sort_post_provider();
+	post_box.print_post_box();
+	post_box.to_map();
 	system("pause");
 }
