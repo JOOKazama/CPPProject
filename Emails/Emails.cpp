@@ -262,7 +262,6 @@ class PostBox: public PostImplementation
 				post_box.list_post_implementation.push_back(*iterator);
 				cout<<endl;
 			}
-
 			return input;
 		}
 };
